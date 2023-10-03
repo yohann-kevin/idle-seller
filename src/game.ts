@@ -1,22 +1,46 @@
+import Sylver from './sylver';
+import Gold from './gold';
+
+import { LevelConfig } from './types'
+
 export default class Game {
   money: number;
   moneyInfo: HTMLElement | null | undefined;
   goldContainer: HTMLElement | null | undefined;
   goldUnlocked: boolean;
   unlockButton: HTMLButtonElement | null | undefined;
+  sylverConfig: LevelConfig;
+  goldConfig: LevelConfig;
+  sylver: Sylver | null;
+  gold: Gold | null;
   
-  constructor(money: number, moneyInfo: HTMLElement | null, goldContainer?: HTMLElement | null, unlockButton?: HTMLButtonElement | null) {
+  constructor(
+    moneyInfo: HTMLElement | null,
+    sylverConfig: LevelConfig,
+    goldConfig: LevelConfig,
+    unlockButton?: HTMLButtonElement | null,
+  ) {
     this.moneyInfo = moneyInfo;
-    this.money = money;
     this.money = 0;
-    this.goldContainer = goldContainer;
     this.goldUnlocked = false;
     this.unlockButton = unlockButton;
+    this.sylverConfig = sylverConfig;
+    this.goldConfig = goldConfig;
+    this.sylver = null;
+    this.gold = null;
+  }
+
+  start() {
+    this.sylver = new Sylver(this, this.sylverConfig);
+    this.sylver.initSylver();
+
+    // start game
+    this.render();
   }
 
   render() {
-    if (!this.goldUnlocked && this.goldContainer) {
-      this.goldContainer.style.display = 'none';
+    if (!this.goldUnlocked && this.goldConfig.container) {
+      this.goldConfig.container.style.display = 'none';
     }
 
     // implement here
@@ -80,10 +104,18 @@ export default class Game {
 
   manageUnlockGold() {
     if (this.canUnlockGold(1000)) {
-      if (this.goldContainer) {
-        this.goldContainer.style.display = 'initial';
+      if (this.goldConfig.container) {
+        this.goldConfig.container.style.display = 'initial';
         this.goldUnlocked = true;
+        this.money = this.money - 1000;
+        this.gold = new Gold(this, this.goldConfig);
+        this.gold.initGold();
       }
     }
+  }
+
+  convertToSylver(value: number, multiplicator: number) {
+    const valueToAdd: number = value * multiplicator;
+    this.sylver?.convert(valueToAdd);
   }
 }

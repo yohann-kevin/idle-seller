@@ -1,4 +1,6 @@
-import Game from './game.js'
+import Game from './game'
+
+import { LevelConfig } from './types'
 
 export default class Silver {
   game: Game;
@@ -8,7 +10,7 @@ export default class Silver {
   workSylver: HTMLElement | null;
   lvlUpSylver: HTMLElement | null;
   sylverInfo: HTMLElement | null;
-  sellButton: HTMLElement | null;
+  sellButton: HTMLElement | null | undefined;
   addWorkerSylver: HTMLButtonElement;
   priceForWorker: number;
   enableWorker: boolean;
@@ -17,19 +19,15 @@ export default class Silver {
   workerInterval: NodeJS.Timeout | number | null = null;
 
   constructor(
-      game: Game,
-      workSylver: HTMLElement | null,
-      lvlUpSylver: HTMLElement | null,
-      sylverInfo: HTMLElement | null,
-      sellButton: HTMLElement | null,
-      addWorkerSylver: HTMLButtonElement
-    ) {
+    game: Game,
+    sylverConfig: LevelConfig,
+  ) {
     this.game = game;
-    this.workSylver = workSylver;
-    this.lvlUpSylver = lvlUpSylver;
-    this.sylverInfo = sylverInfo;
-    this.sellButton = sellButton;
-    this.addWorkerSylver = addWorkerSylver;
+    this.workSylver = sylverConfig.worker;
+    this.lvlUpSylver = sylverConfig.lvlUpButton;
+    this.sylverInfo = sylverConfig.infoContainer;
+    this.sellButton = sylverConfig.sellButton;
+    this.addWorkerSylver = sylverConfig.addWorker;
     this.level = 1;
     this.value = 0;
     this.priceToLevelUp = 10;
@@ -118,7 +116,6 @@ export default class Silver {
         const stringDecimal: string = `${1}.${this.numWorker}`;
         const divider: number = +stringDecimal;
         this.workerTime = this.workerTime / divider;
-        console.log('this.workerTime', this.workerTime);
       }
       this.priceForWorker = this.priceForWorker * 2;
       this.displayInfo();
@@ -134,5 +131,9 @@ export default class Silver {
     this.workerInterval = setInterval(() => {
       this.work();
     }, this.workerTime);
+  }
+
+  convert(valueToAdd: number) {
+    this.value = this.value + valueToAdd;
   }
 }
