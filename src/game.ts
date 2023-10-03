@@ -3,26 +3,34 @@ export default class Game {
   moneyInfo: HTMLElement | null | undefined;
   goldContainer: HTMLElement | null | undefined;
   goldUnlocked: boolean;
-  unlockButton: HTMLElement | null;
+  unlockButton: HTMLButtonElement | null | undefined;
   
-  constructor(money: number, moneyInfo: HTMLElement | null, goldContainer?: HTMLElement | null, unlockButton?: HTMLElement | null) {
+  constructor(money: number, moneyInfo: HTMLElement | null, goldContainer?: HTMLElement | null, unlockButton?: HTMLButtonElement | null) {
     this.moneyInfo = moneyInfo;
     this.money = money;
+    this.money = 1000;
     this.goldContainer = goldContainer;
     this.goldUnlocked = false;
-    this.unlockButton = unlockButton || null;
+    this.unlockButton = unlockButton;
   }
 
   render() {
     if (!this.goldUnlocked && this.goldContainer) {
       this.goldContainer.style.display = 'none';
     }
+
     // implement here
     this.displayMoney();
   }
 
-  manageButtonUnlockLevel() {
-    // plop
+  displayUnlockLevel() {
+    if (this.unlockButton) {
+      this.unlockButton.disabled = false;
+
+      this.unlockButton.addEventListener('click', () => {
+        this.manageUnlockGold();
+      });
+    }
   }
 
   displayMoney() {
@@ -60,5 +68,22 @@ export default class Game {
   buyWorker(priceToAddWorker: number) {
     this.money = this.money - priceToAddWorker;
     this.render();
+  }
+
+  canUnlockGold(priceToUnlockLevel: number): boolean {
+    if (this.money >= priceToUnlockLevel) {
+      return true;
+    }
+
+    return false;
+  }
+
+  manageUnlockGold() {
+    if (this.canUnlockGold(1000)) {
+      if (this.goldContainer) {
+        this.goldContainer.style.display = 'initial';
+        this.goldUnlocked = true;
+      }
+    }
   }
 }

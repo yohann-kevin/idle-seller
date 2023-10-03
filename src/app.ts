@@ -11,7 +11,8 @@ import Game from './game.js';
 import Sylver from './sylver.js';
 
 const moneyInfo: HTMLElement | null = document.getElementById('money');
-const unlockButton: HTMLElement | null = document.getElementById('unlock');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const unlockButton: any = document.getElementById('unlock');
 const sylverInfo: HTMLElement | null = document.getElementById('sylverInfo');
 
 const goldContainer: HTMLElement | null = document.getElementById('goldContainer');
@@ -35,7 +36,7 @@ const money = 0;
 function main(): void {
   const game = new Game(money, moneyInfo, goldContainer, unlockButton);
   game.render();
-  const sylver: Sylver = new Sylver(workSylver, lvlUpSylver, sylverInfo, sellButton, money, moneyInfo, addWorkerSylver);
+  const sylver: Sylver = new Sylver(game, workSylver, lvlUpSylver, sylverInfo, sellButton, addWorkerSylver);
   sylver.initSylver();
   // TODO: next step implement gold
 }

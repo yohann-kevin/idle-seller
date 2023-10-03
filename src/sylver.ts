@@ -1,6 +1,7 @@
 import Game from './game.js'
 
-export default class Silver extends Game {
+export default class Silver {
+  game: Game;
   level: number;
   value: number;
   priceToLevelUp: number;
@@ -16,23 +17,22 @@ export default class Silver extends Game {
   workerInterval: NodeJS.Timeout | number | null = null;
 
   constructor(
+      game: Game,
       workSylver: HTMLElement | null,
       lvlUpSylver: HTMLElement | null,
       sylverInfo: HTMLElement | null,
       sellButton: HTMLElement | null,
-      money: number,
-      moneyInfo: HTMLElement | null,
       addWorkerSylver: HTMLButtonElement
     ) {
-    super(money, moneyInfo);
+    this.game = game;
     this.workSylver = workSylver;
     this.lvlUpSylver = lvlUpSylver;
     this.sylverInfo = sylverInfo;
     this.sellButton = sellButton;
-    this.level = 1;
+    this.addWorkerSylver = addWorkerSylver;
+    this.level = 19;
     this.value = 0;
     this.priceToLevelUp = 10;
-    this.addWorkerSylver = addWorkerSylver;
     this.priceForWorker = 100;
     this.enableWorker = false;
     this.numWorker = 0;
@@ -50,7 +50,7 @@ export default class Silver extends Game {
     });
 
     this.sellButton?.addEventListener('click', () => {
-      this.selling(this.value);
+      this.game.selling(this.value);
       this.value = 0;
       this.displayInfo();
     });
@@ -72,20 +72,25 @@ export default class Silver extends Game {
   }
 
   work() {
-    console.log('work');
     this.value += this.level;
     this.displayInfo();
   }
 
   sylverLevelUp() {
-    if (this.canLevelUp(this.priceToLevelUp)) {
-      this.levelUp(this.priceToLevelUp);
+    if (this.game.canLevelUp(this.priceToLevelUp)) {
+      this.game.levelUp(this.priceToLevelUp);
       this.level += 1;
+
       // check level for enable add worker
       if (!this.enableWorker && this.level >= 10) {
         this.enableWorker = true;
         this.initAddWorker();
       }
+
+      if (this.level >= 20) {
+        this.game.displayUnlockLevel();
+      }
+
       this.priceToLevelUp = this.priceToLevelUp + (this.level * 2);
       this.displayInfo();
     }
@@ -106,8 +111,8 @@ export default class Silver extends Game {
   }
 
   addWorker() {
-    if (this.canBuyWorker(this.priceForWorker)) {
-      this.buyWorker(this.priceForWorker);
+    if (this.game.canBuyWorker(this.priceForWorker)) {
+      this.game.buyWorker(this.priceForWorker);
       this.numWorker = this.numWorker += 1;
       if (this.numWorker > 1) {
         const stringDecimal: string = `${1}.${this.numWorker}`;
