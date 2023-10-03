@@ -1,10 +1,28 @@
 export default class Game {
   money: number;
   moneyInfo: HTMLElement | null | undefined;
+  goldContainer: HTMLElement | null | undefined;
+  goldUnlocked: boolean;
+  unlockButton: HTMLElement | null;
   
-  constructor(money: number, moneyInfo?: HTMLElement | null) {
+  constructor(money: number, moneyInfo: HTMLElement | null, goldContainer?: HTMLElement | null, unlockButton?: HTMLElement | null) {
     this.moneyInfo = moneyInfo;
     this.money = money;
+    this.goldContainer = goldContainer;
+    this.goldUnlocked = false;
+    this.unlockButton = unlockButton || null;
+  }
+
+  render() {
+    if (!this.goldUnlocked && this.goldContainer) {
+      this.goldContainer.style.display = 'none';
+    }
+    // implement here
+    this.displayMoney();
+  }
+
+  manageButtonUnlockLevel() {
+    // plop
   }
 
   displayMoney() {
@@ -15,7 +33,7 @@ export default class Game {
 
   selling(value: number) {
     this.money += value;
-    this.displayMoney();
+    this.render();
   }
 
   canLevelUp(priceToLevelUp: number): boolean {
@@ -28,7 +46,7 @@ export default class Game {
 
   levelUp(priceToLevelUp: number) {
     this.money = this.money - priceToLevelUp;
-    this.displayMoney();
+    this.render();
   }
 
   canBuyWorker(priceToAddWorker: number): boolean {
@@ -41,6 +59,6 @@ export default class Game {
 
   buyWorker(priceToAddWorker: number) {
     this.money = this.money - priceToAddWorker;
-    this.displayMoney();
+    this.render();
   }
 }
