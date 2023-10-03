@@ -30,7 +30,7 @@ export default class Silver {
     this.sylverInfo = sylverInfo;
     this.sellButton = sellButton;
     this.addWorkerSylver = addWorkerSylver;
-    this.level = 19;
+    this.level = 1;
     this.value = 0;
     this.priceToLevelUp = 10;
     this.priceForWorker = 100;

@@ -8,7 +8,7 @@ export default class Game {
   constructor(money: number, moneyInfo: HTMLElement | null, goldContainer?: HTMLElement | null, unlockButton?: HTMLButtonElement | null) {
     this.moneyInfo = moneyInfo;
     this.money = money;
-    this.money = 1000;
+    this.money = 0;
     this.goldContainer = goldContainer;
     this.goldUnlocked = false;
     this.unlockButton = unlockButton;
